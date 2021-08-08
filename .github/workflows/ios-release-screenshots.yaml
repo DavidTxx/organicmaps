@@ -1,0 +1,43 @@
+name: iOS Release Screenshots
+on:
+  workflow_dispatch: # Manual trigger
+  push:  # TODO: remove
+    branches:
+      - rt-upload-metadata
+
+jobs:
+  ios-release-screenshots:
+    name: Upload AppStore screenshots
+    runs-on: macos-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Checkout private keys
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ secrets.PRIVATE_REPO }}
+          ssh-key: ${{ secrets.PRIVATE_SSH_KEY }}
+          ref: master
+          path: ./private.git
+
+      - name: Configure repo with private keys
+        shell: bash
+        run: |
+          mkdir -p xcode/keys/
+          cp -p ./private.git/xcode/keys/appstore.json xcode/keys/
+          rm -rf ./private.git
+
+      - name: Checkout screenshots
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ secrets.SCREENSHOTS_REPO }}
+          ssh-key: ${{ secrets.SCREENSHOTS_SSH_KEY }}
+          ref: master
+          path: screenshots
+
+      - name: Upload screenshots
+        shell: bash
+        run: ./fastlane.sh upload_screenshots
+        working-directory: xcode

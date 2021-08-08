@@ -1,0 +1,38 @@
+name: iOS Release Metadata
+on:
+  workflow_dispatch: # Manual trigger
+  push:
+    branches:
+      - master
+      - rt-upload-metadata # TODO: remove
+#    paths:
+#      - iphone/metadata/**
+
+jobs:
+  ios-release-metadata:
+    name: Upload AppStore metadata
+    runs-on: macos-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Checkout private keys
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ secrets.PRIVATE_REPO }}
+          ssh-key: ${{ secrets.PRIVATE_SSH_KEY }}
+          ref: master
+          path: private.git
+
+      - name: Configure repo with private keys
+        shell: bash
+        run: |
+          mkdir -p xcode/keys/
+          cp -p ./private.git/xcode/keys/appstore.json xcode/keys/
+          rm -rf ./private.git
+
+      - name: Upload metadata
+        shell: bash
+        run: ./fastlane.sh upload_metadata
+        working-directory: xcode

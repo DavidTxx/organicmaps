@@ -1,9 +1,9 @@
 name: Linux Check
 on:
+  workflow_dispatch: # Manual trigger
   pull_request:
     paths-ignore:
-      - .github/workflows/android*
-      - .github/workflows/ios*
+      - .github/**
       - CONTRIBUTORS
       - LICENSE
       - NOTICE

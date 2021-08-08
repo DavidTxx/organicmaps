@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - rt-upload-metadata # TODO: remove
     paths-ignore:
     - .github/workflows/android-release*
     - .github/workflows/android-check*
