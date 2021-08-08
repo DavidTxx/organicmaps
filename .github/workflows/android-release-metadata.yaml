@@ -55,3 +55,4 @@ jobs:
         shell: bash
         run: ./gradlew publishGoogleReleaseListing
         working-directory: android
+        timeout-minutes: 10

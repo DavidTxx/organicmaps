@@ -36,3 +36,4 @@ jobs:
         shell: bash
         run: ./fastlane.sh upload_metadata
         working-directory: xcode
+        timeout-minutes: 10

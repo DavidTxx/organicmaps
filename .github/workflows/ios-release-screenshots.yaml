@@ -1,7 +1,7 @@
 name: iOS Release Screenshots
 on:
   workflow_dispatch: # Manual trigger
-  push:  # TODO: remove
+  push: # TODO: remove
     branches:
       - rt-upload-metadata
 
@@ -41,3 +41,4 @@ jobs:
         shell: bash
         run: ./fastlane.sh upload_screenshots
         working-directory: xcode
+        timeout-minutes: 10
